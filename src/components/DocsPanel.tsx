@@ -4,8 +4,8 @@ Supports language switching (English / 中文). The choice is persisted to
 localStorage and defaults to English.
 */
 import { useEffect, useMemo, useState } from "react";
-import guideZh from "../../../docs/USER_GUIDE.md?raw";
-import guideEn from "../../../docs/USER_GUIDE_EN.md?raw";
+import guideZh from "../../docs/USER_GUIDE.md?raw";
+import guideEn from "../../docs/USER_GUIDE_EN.md?raw";
 import { renderMarkdown } from "../docs/Markdown";
 
 interface Section {
