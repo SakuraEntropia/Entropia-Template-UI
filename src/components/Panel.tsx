@@ -67,6 +67,15 @@ export const PANEL_TYPES: { value: PanelType; label: string; category: string }[
 
 const PANEL_CATEGORIES = ["Editor", "Data", "Tools"];
 
+/** Visibility filter for the panel-type dropdown. Consumers with a focused
+ * panel set (e.g. audio workstations) can hide unrelated panel types; the
+ * default shows everything (original behavior). */
+let visiblePanelTypes = new Set<PanelType>(PANEL_TYPES.map((t) => t.value));
+
+export function setPanelTypeVisibility(types: PanelType[]): void {
+  visiblePanelTypes = new Set(types);
+}
+
 export function panelLabel(type: PanelType): string {
   return PANEL_TYPES.find((t) => t.value === type)?.label ?? type;
 }
@@ -133,7 +142,7 @@ function TypeDropdown({
               {PANEL_CATEGORIES.map((cat) => (
                 <div key={cat} className="type-menu-col">
                   <div className="type-menu-cat">{cat}</div>
-                  {PANEL_TYPES.filter((t) => t.category === cat).map((t) => (
+                  {PANEL_TYPES.filter((t) => t.category === cat && visiblePanelTypes.has(t.value)).map((t) => (
                     <div
                       key={t.value}
                       className={`type-menu-item ${t.value === type ? "active" : ""}`}

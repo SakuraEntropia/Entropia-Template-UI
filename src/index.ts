@@ -38,6 +38,7 @@ export {
   renderPanelContent,
   panelLabel,
   PANEL_TYPES,
+  setPanelTypeVisibility,
 } from "./components/Panel";
 export { HSplitter, VSplitter } from "./components/Splitter";
 
