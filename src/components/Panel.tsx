@@ -56,7 +56,7 @@ export const PANEL_TYPES: { value: PanelType; label: string; category: string }[
   { value: "inspector", label: "Inspector", category: "Editor" },
   { value: "status", label: "Status / Logs", category: "Editor" },
   { value: "loss", label: "Loss Curve", category: "Editor" },
-  { value: "nodes", label: "Node Library", category: "Data" },
+  { value: "nodes", label: "Scene", category: "Data" },
   { value: "files", label: "Asset Library", category: "Data" },
   { value: "project", label: "New File", category: "Data" },
   { value: "code", label: "Code Editor", category: "Tools" },
