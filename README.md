@@ -10,7 +10,25 @@ node frames, subgraph breadcrumb, code editor, handwriting pad, plugin panel,
 file manager, and a Windows-style file picker — ready to wire to your own
 backend.
 
-## Quick start
+## Use as a library (npm)
+
+```bash
+npm install entropia-template-ui
+```
+
+`react` / `react-dom` are peer dependencies (install them alongside);
+`@xyflow/react` and `zustand` are bundled as dependencies.
+
+```tsx
+import { App, GraphCanvas, useGraphStore, APP_VERSION } from "entropia-template-ui";
+import "entropia-template-ui/style.css";
+import "@xyflow/react/dist/style.css";
+```
+
+The full editor is `<App />`; every panel, the canvas, the store, and the theme
+helpers are also exported for custom embedding.
+
+## Quick start (development)
 
 ```bash
 npm install

@@ -1,6 +1,7 @@
 # Node / build
 node_modules/
 dist/
+*.tgz
 
 # OS
 .DS_Store

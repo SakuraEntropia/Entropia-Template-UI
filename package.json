@@ -1,20 +1,52 @@
 {
   "name": "entropia-template-ui",
-  "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Reusable node-graph editor UI template (React + Vite + React Flow + Zustand).",
+  "description": "Reusable node-graph editor UI library (React + Vite + React Flow + Zustand) — the Entropia Riko frontend template.",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "keywords": [
+    "node-graph",
+    "react-flow",
+    "deep-learning",
+    "editor",
+    "visual-programming",
+    "zustand",
+    "pytorch"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SakuraEntropia/Entropia-Template-UI.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.lib.json",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
   "dependencies": {
     "@xyflow/react": "^12.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
