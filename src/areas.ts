@@ -93,7 +93,7 @@ export const WORKSPACE_PRESETS: WorkspacePreset[] = [
     build: () => buildLayout({ right: "code", bottom: ["status", "loss"], leftExtra: "files", canvasRatio: 0.6 }) },
   { id: "inference", label: "Inference", category: "General", description: "Large canvas + inspector, no training.",
     build: () => buildLayout({ right: "inspector", bottom: ["status", "docs"], leftExtra: "files", canvasRatio: 0.74 }) },
-  { id: "training", label: "Training", category: "Training", description: "Live loss curve + inspector for training runs.",
+  { id: "training", label: "Train", category: "Training", description: "Live loss curve + inspector for training runs.",
     build: () => buildLayout({ right: "loss", bottom: ["status", "inspector"], leftExtra: "files", canvasRatio: 0.6 }) },
   { id: "tuning", label: "Hyperparameter Tuning", category: "Training", description: "Loss + docs; inspector below.",
     build: () => buildLayout({ right: "loss", bottom: ["inspector", "docs"], canvasRatio: 0.62 }) },
@@ -113,11 +113,12 @@ export const WORKSPACE_PRESETS: WorkspacePreset[] = [
     build: () => buildLayout({ right: "inspector", bottom: ["status", "docs"], canvasRatio: 0.72 }) },
 ];
 
-/** A runtime workspace instance (its own editable layout). */
+/** A runtime workspace instance (its own editable layout + optional default graph). */
 export interface WorkspaceInstance {
   id: string;
   name: string;
   root: AreaNode;
+  graph?: string;
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));

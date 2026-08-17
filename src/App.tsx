@@ -28,9 +28,13 @@ import { useGraphStore } from "./store/graphStore";
 let wsUid = 0;
 const newWsId = () => `ws_${++wsUid}`;
 
-/** The starting workspace — a single practical layout (the root workflow is
- * loaded below, so there is no need for empty decorative preset tabs). */
-const DEFAULT_PRESETS = ["layout"];
+/** Starting tabs, Blender-style: each is a real workflow with a default graph.
+ * Train / Inference / Layout map to the most useful presets. */
+const DEFAULT_TABS: { preset: string; graph: string }[] = [
+  { preset: "training", graph: "examples/models/mnist_cnn.riko" },
+  { preset: "inference", graph: "examples/models/mnist_infer.riko" },
+  { preset: "layout", graph: "examples/models/mnist.riko" },
+];
 
 export default function App() {
   const loadNodeDefs = useGraphStore((s) => s.loadNodeDefs);
@@ -43,20 +47,20 @@ export default function App() {
   const setAboutOpen = useGraphStore((s) => s.setAboutOpen);
   const importFolderOpen = useGraphStore((s) => s.importFolderOpen);
   const setImportFolderOpen = useGraphStore((s) => s.setImportFolderOpen);
-  // Load the live node registry, then open a practical root workflow so the
-  // canvas starts with a real (trainable) graph instead of an empty sheet.
+  // Load the live node registry, then open the first workflow's graph so the
+  // canvas starts with a real (trainable) root flow instead of an empty sheet.
   useEffect(() => {
     (async () => {
       await loadNodeDefs();
-      await openFile("examples/models/mnist_cnn.riko");
+      await openFile(DEFAULT_TABS[0].graph);
     })();
   }, [loadNodeDefs, openFile]);
 
-  // Build one workspace instance per default preset as the starting tabs.
+  // Build one workflow tab per default entry as the starting tabs.
   const [workspaces, setWorkspaces] = useState<WorkspaceInstance[]>(() =>
-    DEFAULT_PRESETS.map((pid) => {
-      const preset = WORKSPACE_PRESETS.find((p) => p.id === pid)!;
-      return { id: newWsId(), name: preset.label, root: preset.build() };
+    DEFAULT_TABS.map((t) => {
+      const preset = WORKSPACE_PRESETS.find((p) => p.id === t.preset)!;
+      return { id: newWsId(), name: preset.label, root: preset.build(), graph: t.graph };
     })
   );
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -74,7 +78,12 @@ export default function App() {
     setWorkspaces((ws) => ws.map((w) => (w.id === effectiveActiveId ? { ...w, root: fn(w.root) } : w)));
   };
 
-  const switchWorkspace = (id: string) => setActiveId(id);
+  const switchWorkspace = (id: string) => {
+    setActiveId(id);
+    // Each workflow tab carries its own default graph (Blender-style modes).
+    const ws = workspaces.find((w) => w.id === id);
+    if (ws?.graph) void openFile(ws.graph);
+  };
 
   const addWorkspace = (presetId: string) => {
     const preset = WORKSPACE_PRESETS.find((p) => p.id === presetId);
