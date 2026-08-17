@@ -28,11 +28,13 @@ import { useGraphStore } from "./store/graphStore";
 let wsUid = 0;
 const newWsId = () => `ws_${++wsUid}`;
 
-/** A few preset workspaces ship as default tabs, like Blender. */
-const DEFAULT_PRESETS = ["layout", "training", "mnist_studio", "image_gen"];
+/** The starting workspace — a single practical layout (the root workflow is
+ * loaded below, so there is no need for empty decorative preset tabs). */
+const DEFAULT_PRESETS = ["layout"];
 
 export default function App() {
   const loadNodeDefs = useGraphStore((s) => s.loadNodeDefs);
+  const openFile = useGraphStore((s) => s.openFile);
   const welcomeOpen = useGraphStore((s) => s.welcomeOpen);
   const setWelcomeOpen = useGraphStore((s) => s.setWelcomeOpen);
   const prefsOpen = useGraphStore((s) => s.prefsOpen);
@@ -41,10 +43,14 @@ export default function App() {
   const setAboutOpen = useGraphStore((s) => s.setAboutOpen);
   const importFolderOpen = useGraphStore((s) => s.importFolderOpen);
   const setImportFolderOpen = useGraphStore((s) => s.setImportFolderOpen);
-  // Load the live node registry once on mount.
+  // Load the live node registry, then open a practical root workflow so the
+  // canvas starts with a real (trainable) graph instead of an empty sheet.
   useEffect(() => {
-    loadNodeDefs();
-  }, [loadNodeDefs]);
+    (async () => {
+      await loadNodeDefs();
+      await openFile("examples/models/mnist_cnn.riko");
+    })();
+  }, [loadNodeDefs, openFile]);
 
   // Build one workspace instance per default preset as the starting tabs.
   const [workspaces, setWorkspaces] = useState<WorkspaceInstance[]>(() =>
