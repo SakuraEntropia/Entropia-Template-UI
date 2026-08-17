@@ -33,6 +33,7 @@ const newWsId = () => `ws_${++wsUid}`;
 const DEFAULT_TABS: { preset: string; graph: string }[] = [
   { preset: "training", graph: "examples/models/mnist_cnn.riko" },
   { preset: "inference", graph: "examples/models/mnist_infer.riko" },
+  { preset: "code", graph: "examples/models/mnist.riko" },
   { preset: "layout", graph: "examples/models/mnist.riko" },
 ];
 
