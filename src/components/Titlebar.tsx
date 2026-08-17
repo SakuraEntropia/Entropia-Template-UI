@@ -6,7 +6,7 @@
 import { useGraphStore } from "../store/graphStore";
 import { APP_VERSION } from "../version";
 
-export function Titlebar({ title, appName = "Riko" }: { title?: string; appName?: string }) {
+export function Titlebar({ title, appName = "Riko", version }: { title?: string; appName?: string; version?: string }) {
   const dirty = useGraphStore((s) => s.dirty);
   const activeFileName = useGraphStore((s) => s.activeFileName);
 
@@ -18,7 +18,7 @@ export function Titlebar({ title, appName = "Riko" }: { title?: string; appName?
       <span className="titlebar-file">{title ?? activeFileName ?? "Untitled"}</span>
       <span className="titlebar-app"> - {appName}</span>
       <span className="spacer" />
-      <span className="titlebar-version">v{APP_VERSION}</span>
+      <span className="titlebar-version">v{version ?? APP_VERSION}</span>
     </div>
   );
 }
