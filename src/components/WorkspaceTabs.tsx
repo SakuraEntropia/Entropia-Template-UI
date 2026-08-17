@@ -21,6 +21,7 @@ export function WorkspaceTabs({
   onRename,
   onDuplicate,
   onMove,
+  onReorder,
 }: {
   workspaces: WorkspaceInstance[];
   activeId: string;
@@ -30,11 +31,13 @@ export function WorkspaceTabs({
   onRename: (id: string, name: string) => void;
   onDuplicate: (id: string) => void;
   onMove: (id: string, delta: number) => void;
+  onReorder: (id: string, targetId: string) => void;
 }) {
   const [addOpen, setAddOpen] = useState(false);
   const [addPos, setAddPos] = useState<{ x: number; y: number } | null>(null);
   const [ctx, setCtx] = useState<CtxState | null>(null);
   const [overflowing, setOverflowing] = useState(false);
+  const [dragId, setDragId] = useState<string | null>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
 
   // Detect horizontal overflow so CSS can apply the fade mask at the clipped edge.
@@ -92,7 +95,22 @@ export function WorkspaceTabs({
         {workspaces.map((ws) => (
           <div
             key={ws.id}
-            className={`workspace-tab ${ws.id === activeId ? "active" : ""}`}
+            className={`workspace-tab ${ws.id === activeId ? "active" : ""} ${ws.id === dragId ? "dragging" : ""}`}
+            draggable
+            onDragStart={(e) => {
+              setDragId(ws.id);
+              e.dataTransfer.effectAllowed = "move";
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              if (dragId && dragId !== ws.id) onReorder(dragId, ws.id);
+              setDragId(null);
+            }}
+            onDragEnd={() => setDragId(null)}
             onClick={() => onSwitch(ws.id)}
             onContextMenu={(e) => {
               e.preventDefault();

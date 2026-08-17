@@ -394,6 +394,7 @@ body { font-family: var(--font); font-size: 14px; color: var(--color-text); back
 .workspace-tabs.overflowing { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%); }
 .workspace-tabs::-webkit-scrollbar { display: none; }
 .workspace-tab { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border: none; background: transparent; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; border-radius: var(--radius-sm); white-space: nowrap; font-family: var(--font); flex-shrink: 0; }
+.workspace-tab.dragging { opacity: 0.45; }
 .workspace-tab:hover { background: var(--color-surface-2); color: var(--color-text); }
 .workspace-tab.active { background: var(--color-primary-soft); color: var(--color-primary); font-weight: 600; }
 .workspace-tab-close { font-size: 10px; opacity: 0.6; padding: 0 2px; }

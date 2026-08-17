@@ -29,6 +29,7 @@ export function MenuBar({
   onRenameWorkspace,
   onDuplicateWorkspace,
   onMoveWorkspace,
+  onReorderWorkspace,
 }: {
   workspaces: WorkspaceInstance[];
   activeWorkspaceId: string;
@@ -38,6 +39,7 @@ export function MenuBar({
   onRenameWorkspace: (id: string, name: string) => void;
   onDuplicateWorkspace: (id: string) => void;
   onMoveWorkspace: (id: string, delta: number) => void;
+  onReorderWorkspace: (id: string, targetId: string) => void;
 }) {
   // Tracks which top-level menu (or the app logo) is currently open.
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -295,6 +297,7 @@ export function MenuBar({
         onRename={onRenameWorkspace}
         onDuplicate={onDuplicateWorkspace}
         onMove={onMoveWorkspace}
+        onReorder={onReorderWorkspace}
       />
       <input
         ref={fileRef}

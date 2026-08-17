@@ -31,10 +31,10 @@ const newWsId = () => `ws_${++wsUid}`;
 /** Starting tabs, Blender-style: each is a real workflow with a default graph.
  * Train / Inference / Layout map to the most useful presets. */
 const DEFAULT_TABS: { preset: string; graph: string }[] = [
+  { preset: "layout", graph: "examples/models/mnist.riko" },
   { preset: "training", graph: "examples/models/mnist_cnn.riko" },
   { preset: "inference", graph: "examples/models/mnist_infer.riko" },
   { preset: "code", graph: "examples/models/mnist.riko" },
-  { preset: "layout", graph: "examples/models/mnist.riko" },
 ];
 
 export default function App() {
@@ -134,6 +134,19 @@ export default function App() {
     });
   };
 
+  // Drag-to-reorder: move `id` to the position of `targetId`.
+  const reorderWorkspace = (id: string, targetId: string) => {
+    setWorkspaces((ws) => {
+      const from = ws.findIndex((w) => w.id === id);
+      const to = ws.findIndex((w) => w.id === targetId);
+      if (from < 0 || to < 0 || from === to) return ws;
+      const next = [...ws];
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+  };
+
   // When dragging a merge, highlight the sibling that will absorb the panel.
   const mergeTargetId =
     preview?.mode === "merge" ? siblingNodeId(root, preview.leafId) : null;
@@ -215,6 +228,7 @@ export default function App() {
         onRenameWorkspace={renameWorkspace}
         onDuplicateWorkspace={duplicateWorkspace}
         onMoveWorkspace={moveWorkspace}
+        onReorderWorkspace={reorderWorkspace}
       />
       <div className="app-body">{renderArea(root)}</div>
       {welcomeOpen && <WelcomePanel onClose={() => setWelcomeOpen(false)} />}
