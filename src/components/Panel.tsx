@@ -33,7 +33,8 @@ export type PanelType =
   | "docs"
   | "plugins"
   | "code"
-  | "pad";
+  | "pad"
+  | "shader";
 
 export interface PanelSpec {
   id: string;
@@ -63,6 +64,7 @@ export const PANEL_TYPES: { value: PanelType; label: string; category: string }[
   { value: "pad", label: "Handwriting Pad", category: "Tools" },
   { value: "docs", label: "Documentation", category: "Tools" },
   { value: "plugins", label: "Plugins", category: "Tools" },
+  { value: "shader", label: "Node Editor", category: "Editor" },
 ];
 
 const PANEL_CATEGORIES = ["Editor", "Data", "Tools"];
@@ -98,6 +100,7 @@ const contentRegistry: Record<string, PanelRenderer> = {
   plugins: () => <PluginPanel />,
   code: () => <CodeEditor />,
   pad: () => <HandwritingPad />,
+  shader: () => null,
 };
 
 export function registerPanelContent(type: string, render: PanelRenderer): void {

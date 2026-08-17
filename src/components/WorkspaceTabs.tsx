@@ -4,6 +4,7 @@ import { PopupMenu, type MenuEntry } from "./PopupMenu";
 import {
   WORKSPACE_PRESETS,
   type WorkspaceInstance,
+  type WorkspacePreset,
 } from "../areas";
 
 interface CtxState {
@@ -22,6 +23,7 @@ export function WorkspaceTabs({
   onDuplicate,
   onMove,
   onReorder,
+  presets,
 }: {
   workspaces: WorkspaceInstance[];
   activeId: string;
@@ -32,6 +34,8 @@ export function WorkspaceTabs({
   onDuplicate: (id: string) => void;
   onMove: (id: string, delta: number) => void;
   onReorder: (id: string, targetId: string) => void;
+  /** Optional preset list for the "+" menu (default: built-in presets). */
+  presets?: WorkspacePreset[];
 }) {
   const [addOpen, setAddOpen] = useState(false);
   const [addPos, setAddPos] = useState<{ x: number; y: number } | null>(null);
@@ -55,7 +59,7 @@ export function WorkspaceTabs({
   // One menu entry per built-in workspace preset, shown by the "+" button.
   const presetEntries = useMemo<MenuEntry[]>(
     () =>
-      WORKSPACE_PRESETS.map((p) => ({
+      (presets ?? WORKSPACE_PRESETS).map((p) => ({
         id: p.id,
         label: p.label,
         description: p.description,
