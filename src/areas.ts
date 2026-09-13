@@ -77,6 +77,56 @@ function buildLayout(cfg: {
   return split("column", main, bottom, cfg.colRatio ?? 0.84);
 }
 
+/** Train — big canvas with the live loss curve + inspector on the right. */
+function trainLayout(): AreaNode {
+  const left = split("column", leaf("nodes"), leaf("files"), 0.72);
+  const right = split("column", leaf("loss"), leaf("inspector"), 0.42);
+  const center = split("row", leaf("canvas"), right, 0.68);
+  const main = split("row", left, center, 0.24);
+  return split("column", main, leaf("status"), 0.86);
+}
+
+/** Eval — canvas + loss/inspector, with docs on the left for metric notes. */
+function evalLayout(): AreaNode {
+  const left = split("column", leaf("nodes"), leaf("docs"), 0.65);
+  const right = split("column", leaf("loss"), leaf("inspector"), 0.5);
+  const center = split("row", leaf("canvas"), right, 0.7);
+  const main = split("row", left, center, 0.24);
+  return split("column", main, leaf("status"), 0.86);
+}
+
+/** Config — config.py code editor beside the file manager and docs. */
+function configLayout(): AreaNode {
+  const left = split("column", leaf("files"), leaf("project"), 0.62);
+  const right = split("column", leaf("docs"), leaf("inspector"), 0.45);
+  const center = split("row", leaf("code"), right, 0.7);
+  return split("row", left, center, 0.26);
+}
+
+/** Utils — utils.py code editor with plugins + status. */
+function utilsLayout(): AreaNode {
+  const left = split("column", leaf("plugins"), leaf("docs"), 0.45);
+  const center = split("row", leaf("code"), leaf("status"), 0.78);
+  return split("row", left, center, 0.28);
+}
+
+/** Models — node library + canvas + model code + inspector. */
+function modelsLayout(): AreaNode {
+  const left = split("column", leaf("nodes"), leaf("files"), 0.72);
+  const right = split("column", leaf("code"), leaf("inspector"), 0.52);
+  const center = split("row", leaf("canvas"), right, 0.6);
+  const main = split("row", left, center, 0.24);
+  return split("column", main, leaf("status"), 0.87);
+}
+
+/** Datasets — asset library + project explorer + canvas + dataset code. */
+function datasetsLayout(): AreaNode {
+  const left = split("column", leaf("files"), leaf("project"), 0.6);
+  const right = split("column", leaf("code"), leaf("docs"), 0.55);
+  const center = split("row", leaf("canvas"), right, 0.64);
+  return split("row", left, center, 0.3);
+}
+
 /** A named workspace preset (categorized for the "+" menu). */
 export interface WorkspacePreset {
   id: string;
@@ -87,14 +137,26 @@ export interface WorkspacePreset {
 }
 
 export const WORKSPACE_PRESETS: WorkspacePreset[] = [
-  { id: "layout", label: "Layout", category: "General", description: "Full IDE: nodes, asset library, code editor, canvas, inspector.",
+  // ---- primary project workspaces (the default tabs) ----
+  { id: "layout", label: "Layout", category: "Project", description: "Full IDE: nodes, assets, canvas, inspector, loss.",
     build: defaultLayout },
+  { id: "train", label: "Train", category: "Project", description: "train.py — canvas, live loss curve, inspector.",
+    build: trainLayout },
+  { id: "eval", label: "Eval", category: "Project", description: "eval.py — canvas, loss, docs for metrics.",
+    build: evalLayout },
+  { id: "config", label: "Config", category: "Project", description: "config.py — code editor + file manager + docs.",
+    build: configLayout },
+  { id: "utils", label: "Utils", category: "Project", description: "utils.py — code editor + plugins.",
+    build: utilsLayout },
+  { id: "models", label: "Models", category: "Project", description: "models/ — node library, model code, canvas.",
+    build: modelsLayout },
+  { id: "datasets", label: "Datasets", category: "Project", description: "datasets/ — asset library, dataset code, canvas.",
+    build: datasetsLayout },
+  // ---- extra workspaces (available from the "+" menu) ----
   { id: "code", label: "Code", category: "General", description: "Big code editor + canvas for previewing exported PyTorch.",
     build: () => buildLayout({ right: "code", bottom: ["status", "loss"], leftExtra: "files", canvasRatio: 0.6 }) },
   { id: "inference", label: "Inference", category: "General", description: "Large canvas + inspector, no training.",
     build: () => buildLayout({ right: "inspector", bottom: ["status", "docs"], leftExtra: "files", canvasRatio: 0.74 }) },
-  { id: "training", label: "Train", category: "Training", description: "Live loss curve + inspector for training runs.",
-    build: () => buildLayout({ right: "loss", bottom: ["status", "inspector"], leftExtra: "files", canvasRatio: 0.6 }) },
   { id: "tuning", label: "Hyperparameter Tuning", category: "Training", description: "Loss + docs; inspector below.",
     build: () => buildLayout({ right: "loss", bottom: ["inspector", "docs"], canvasRatio: 0.62 }) },
   { id: "mnist_studio", label: "MNIST Studio", category: "Vision", description: "Handwriting pad above the inspector — draw a digit and infer.",

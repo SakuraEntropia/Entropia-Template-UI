@@ -28,13 +28,16 @@ import { useGraphStore } from "./store/graphStore";
 let wsUid = 0;
 const newWsId = () => `ws_${++wsUid}`;
 
-/** Starting tabs, Blender-style: each is a real workflow with a default graph.
- * Train / Inference / Layout map to the most useful presets. */
+/** Starting tabs, one per part of the project (IDE-like):
+ * Layout / Train / Eval / Config / Utils / Models / Datasets. */
 const DEFAULT_TABS: { preset: string; graph: string }[] = [
   { preset: "layout", graph: "examples/models/mnist.riko" },
-  { preset: "training", graph: "examples/models/mnist_cnn.riko" },
-  { preset: "inference", graph: "examples/models/mnist_infer.riko" },
-  { preset: "code", graph: "examples/models/mnist.riko" },
+  { preset: "train", graph: "examples/models/mnist_cnn.riko" },
+  { preset: "eval", graph: "examples/models/mnist_infer.riko" },
+  { preset: "config", graph: "examples/models/mnist.riko" },
+  { preset: "utils", graph: "examples/models/mnist.riko" },
+  { preset: "models", graph: "examples/models/mnist.riko" },
+  { preset: "datasets", graph: "examples/models/mnist.riko" },
 ];
 
 export default function App() {
@@ -81,9 +84,10 @@ export default function App() {
 
   const switchWorkspace = (id: string) => {
     setActiveId(id);
-    // Each workflow tab carries its own default graph (Blender-style modes).
+    // Each project tab carries its own default graph, but never discard
+    // unsaved edits — only load when the current graph is clean.
     const ws = workspaces.find((w) => w.id === id);
-    if (ws?.graph) void openFile(ws.graph);
+    if (ws?.graph && !useGraphStore.getState().dirty) void openFile(ws.graph);
   };
 
   const addWorkspace = (presetId: string) => {
